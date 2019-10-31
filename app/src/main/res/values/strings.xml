@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Project-Checker</string>
+    <string name="title">Let\'s Check!</string>
+    <string name="add_btn">+</string>
 </resources>
