@@ -2,4 +2,6 @@
     <string name="app_name">Project-Checker</string>
     <string name="title">Let\'s Check!</string>
     <string name="add_btn">+</string>
+    <string name="input_hint">new list  name:</string>
+    <string name="list_name_input">your new list name</string>
 </resources>
