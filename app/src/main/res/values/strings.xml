@@ -4,4 +4,5 @@
     <string name="add_btn">+</string>
     <string name="input_hint">new list  name:</string>
     <string name="list_name_input">your new list name</string>
+    <string name="save">save</string>
 </resources>
