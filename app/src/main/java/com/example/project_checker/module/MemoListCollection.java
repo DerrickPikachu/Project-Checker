@@ -1,5 +1,13 @@
 package com.example.project_checker.module;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class MemoListCollection {
@@ -17,11 +25,44 @@ public class MemoListCollection {
         MemoList is already implements Serializable.
      */
 
-    private void writeList() {
-        
+    public void writeList() {
+        String s = "test";
+        allList.add(new MemoList(s));
+
+        try{
+            ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(fileName));
+
+            output.writeInt(allList.size());
+            for (int i=0; i<allList.size(); i++)
+                output.writeObject(allList.get(i));
+
+            output.close();
+        }
+        catch(IOException e) {
+            System.out.println("write error");
+        }
     }
 
-    private void readList() {
+    public void readList() {
+        try{
+            ObjectInputStream input = new ObjectInputStream(new FileInputStream(fileName));
+            int size = input.readInt();
 
+            for (int i=0; i<size; i++) {
+                allList.add((MemoList)input.readObject());
+            }
+
+            input.close();
+        }
+        catch (ClassNotFoundException e) {
+            System.out.println("class not found");
+        }
+        catch (IOException e) {
+            System.out.println("read error");
+        }
+    }
+
+    public String getContent(int index) {
+        return allList.get(index).getDescribe();
     }
 }
