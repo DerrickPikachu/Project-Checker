@@ -1,18 +1,17 @@
 package com.example.project_checker.module;
 
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInput;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class MemoListCollection {
-    private ArrayList<MemoList> allList;
-    private final static String fileName = "memo_data";
+    private static ArrayList<MemoList> allList;
+    private final static String FILENAME = "memo_list";
+    private static File path;
 
     public MemoListCollection() {
         allList = new ArrayList<>();
@@ -23,46 +22,69 @@ public class MemoListCollection {
         Here I want to write/read allList into/from a binary file.
         As a result, I need to use some File I/O in java.
         MemoList is already implements Serializable.
+
+        Format:
+            The first data is a int number, and after this are MemoList object
      */
 
-    public void writeList() {
-        String s = "test";
-        allList.add(new MemoList(s));
+    public static void setPath(File f) {
+        path = f;
+    }
 
-        try{
-            ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(fileName));
+    public void writeList() {
+        File file = new File(path, FILENAME);
+
+        try {
+            ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(file));
+
+//            allList.add(new MemoList("text"));
 
             output.writeInt(allList.size());
-            for (int i=0; i<allList.size(); i++)
+            for (int i=0; i<allList.size(); i++) {
                 output.writeObject(allList.get(i));
+            }
 
             output.close();
         }
         catch(IOException e) {
-            System.out.println("write error");
+            System.out.println(e.toString());
         }
     }
 
-    public void readList() {
-        try{
-            ObjectInputStream input = new ObjectInputStream(new FileInputStream(fileName));
-            int size = input.readInt();
+    private void readList() {
+        File file = new File(path, FILENAME);
 
+        try{
+            ObjectInputStream input = new ObjectInputStream(new FileInputStream(file));
+
+            int size = input.readInt();
             for (int i=0; i<size; i++) {
                 allList.add((MemoList)input.readObject());
             }
 
             input.close();
         }
-        catch (ClassNotFoundException e) {
-            System.out.println("class not found");
+        catch(IOException e) {
+            System.out.println(e.toString());
         }
-        catch (IOException e) {
-            System.out.println("read error");
+        catch(ClassNotFoundException e) {
+            System.out.println(e.toString());
         }
     }
 
     public String getContent(int index) {
-        return allList.get(index).getDescribe();
+        try {
+            if (index < 0 || index >= allList.size())
+                throw new Exception("index out of bound");
+            return allList.get(index).getDescribe();
+        }
+        catch(Exception e) {
+            System.out.println(e.toString());
+            return "";
+        }
+    }
+
+    public int size() {
+        return allList.size();
     }
 }
